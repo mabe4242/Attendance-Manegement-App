@@ -3,11 +3,17 @@
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\AttendanceController as UserAttendanceController;
+use App\Http\Controllers\BreakController;
 use Illuminate\Support\Facades\Route;
 
 // ユーザー認証
 Route::middleware(['auth:web'])->group(function () {
     Route::get('/attendance', [UserAttendanceController::class, 'create'])->name('attendance.create');
+    Route::post('/attendance', [UserAttendanceController::class, 'store'])->name('attendance.store');
+    Route::post('/attendance/checkout', [UserAttendanceController::class, 'checkout'])->name('attendance.checkout');
+    Route::get('/attendance/list', [UserAttendanceController::class, 'index'])->name('attendance.index');
+    Route::post('/attendance/{id}/break/start', [BreakController::class, 'start'])->name('break.start');
+    Route::post('/attendance/{id}/break/end', [BreakController::class, 'end'])->name('break.end');
 });
 
 // 管理者認証
