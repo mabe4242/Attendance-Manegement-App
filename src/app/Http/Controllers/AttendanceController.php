@@ -6,13 +6,15 @@ use App\Enums\AttendanceStatus;
 use App\Models\Attendance;
 use App\Services\AttendanceFormatter;
 use App\Services\CarbonCalc;
+use App\Traits\HandlesTransaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends Controller
 {
+    use HandlesTransaction;
+
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -52,7 +54,7 @@ class AttendanceController extends Controller
         $userId = Auth::id();
         $now = now();
 
-        return DB::transaction(function () use ($userId, $now) {
+        return $this->handleTransaction(function () use ($userId, $now) {
             $attendance = Attendance::getOrCreateToday($userId, $now, AttendanceStatus::OFF);
 
             if ($attendance->status !== AttendanceStatus::OFF) {
@@ -65,7 +67,7 @@ class AttendanceController extends Controller
             ]);
 
             return redirect()->route('attendance.create');
-        });
+        }, '出勤打刻処理に失敗しました。');
     }
 
     public function checkout()
@@ -73,7 +75,7 @@ class AttendanceController extends Controller
         $userId = Auth::id();
         $now = now();
 
-        return DB::transaction(function () use ($userId, $now) {
+        return $this->handleTransaction(function () use ($userId, $now) {
             $attendance = Attendance::forTodayWithLock($userId, $now)->firstOrFail();
 
             if (! in_array($attendance->status, [AttendanceStatus::WORKING, AttendanceStatus::BREAK], true)) {
@@ -94,6 +96,6 @@ class AttendanceController extends Controller
             ]);
 
             return redirect()->route('attendance.create');
-        });
+        }, '退勤打刻処理に失敗しました。');
     }
 }
