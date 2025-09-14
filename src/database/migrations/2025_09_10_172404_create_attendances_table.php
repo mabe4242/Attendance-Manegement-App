@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\AttendanceStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +20,7 @@ return new class extends Migration
             $table->date('date');
             $table->dateTime('clock_in')->nullable();
             $table->dateTime('clock_out')->nullable();
-            $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('status')->default(AttendanceStatus::OFF);
             $table->timestamps();
             $table->unique(['user_id', 'date']);
             $table->index(['user_id', 'date']);
