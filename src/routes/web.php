@@ -18,6 +18,7 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/attendance/detail/{id}', [UserAttendanceRequestController::class, 'show'])->name('attendance.detail');
     Route::get('/attendance/detail_or_create/{date}', [UserAttendanceRequestController::class, 'detailOrCreate'])->name('attendance.detail_or_create');
     Route::post('/attendance/detail/{id}', [UserAttendanceRequestController::class, 'store'])->name('attendance_request.store');
+    Route::get('/stamp_correction_request/list', [UserAttendanceRequestController::class, 'index'])->name('attendance_requests.index');
 });
 
 // 管理者認証

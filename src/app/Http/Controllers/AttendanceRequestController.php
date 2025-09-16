@@ -24,6 +24,15 @@ class AttendanceRequestController extends Controller
         return view('user.attendance_detail', compact('attendance', 'attendanceRequest', 'breaks'));
     }
 
+    public function index(Request $request)
+    {
+        $status = $request->input('status', RequestStatus::PENDING);
+        $query = AttendanceRequest::where('user_id', Auth::id())->where('status', $status);
+        $attendanceRequests = $query->latest()->get();
+
+        return view('user.request_index', compact('attendanceRequests', 'status'));
+    }
+
     public function detailOrCreate($date)
     {
         $userId = Auth::id();
