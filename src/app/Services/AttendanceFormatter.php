@@ -2,82 +2,64 @@
 
 namespace App\Services;
 
+use App\Models\Attendance;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class AttendanceFormatter
 {
-    /**
-     * 指定された日付範囲でユーザーの勤怠データを整形して返す
-     *
-     * @param  \Illuminate\Support\Collection  $attendanceRecords  (dateをキーにしたコレクション)
-     */
-    public static function format(Collection $attendanceRecords, Carbon $startOfMonth, Carbon $endOfMonth): Collection
+    private static function weekdayLabel($dayOfWeek)
     {
-        $attendances = collect();
-        $currentDate = $startOfMonth->copy();
+        $labels = ['日', '月', '火', '水', '木', '金', '土'];
 
-        while ($currentDate->lte($endOfMonth)) {
-            $record = $attendanceRecords->get($currentDate->toDateString());
-
-            $attendances->push(
-                self::formatOneDay($record, $currentDate)
-            );
-
-            $currentDate->addDay();
-        }
-
-        return $attendances;
+        return $labels[$dayOfWeek];
     }
 
-    // 1日分の勤怠データをフォーマットする
-    protected static function formatOneDay($record, Carbon $date): object
+    //1日分の勤怠データをフォーマット
+    public static function formatSingle(Attendance $attendance, Carbon $date)
     {
-        if ($record) {
-            $clockIn = $record->clock_in ? Carbon::parse($record->clock_in) : null;
-            $clockOut = $record->clock_out ? Carbon::parse($record->clock_out) : null;
+        $workMinutes = 0;
+        $breakMinutes = 0;
 
-            // 休憩合計時間（分）
-            $totalBreakMinutes = $record->breaks->reduce(function ($carry, $break) {
-                if ($break->break_start && $break->break_end) {
-                    $carry += Carbon::parse($break->break_start)->diffInMinutes(Carbon::parse($break->break_end));
-                }
-
-                return $carry;
-            }, 0);
-
-            // 勤務時間（分）
-            $workMinutes = 0;
-            if ($clockIn && $clockOut) {
-                $workMinutes = $clockIn->diffInMinutes($clockOut) - $totalBreakMinutes;
-            }
-
-            return (object) [
-                'id' => $record->id,
-                'date' => $date->toDateString(),
-                'date_display' => $date->format('m/d'),
-                'weekday' => $date->isoFormat('ddd'),
-                'clock_in' => $clockIn ? $clockIn->format('H:i') : '',
-                'clock_out' => $clockOut ? $clockOut->format('H:i') : '',
-                'break' => $totalBreakMinutes > 0
-                    ? sprintf('%d:%02d', floor($totalBreakMinutes / 60), $totalBreakMinutes % 60)
-                    : '',
-                'total_work' => $workMinutes > 0
-                    ? sprintf('%d:%02d', floor($workMinutes / 60), $workMinutes % 60)
-                    : '',
-            ];
+        if ($attendance->clock_in && $attendance->clock_out) {
+            $workMinutes = $attendance->clock_in->diffInMinutes($attendance->clock_out);
         }
 
-        // 出勤記録なし
+        foreach ($attendance->breaks as $break) {
+            if ($break->break_start && $break->break_end) {
+                $breakMinutes += $break->break_start->diffInMinutes($break->break_end);
+            }
+        }
+
         return (object) [
-            'id' => null,
-            'date' => $date->toDateString(),
+            'id'           => $attendance->id,
+            'date'         => $attendance->date,
             'date_display' => $date->format('m/d'),
-            'weekday' => $date->isoFormat('ddd'),
-            'clock_in' => '',
-            'clock_out' => '',
-            'break' => '',
-            'total_work' => '',
+            'weekday'      => self::weekdayLabel($date->dayOfWeek),
+            'clock_in'     => $attendance->clock_in ? $attendance->clock_in->format('H:i') : '',
+            'clock_out'    => $attendance->clock_out ? $attendance->clock_out->format('H:i') : '',
+            'break'        => $attendance->clock_in && $attendance->clock_out ? self::formatMinutes($breakMinutes) : '',
+            'total_work'   => $attendance->clock_in && $attendance->clock_out ? self::formatMinutes($workMinutes - $breakMinutes) : '',
+            'is_future'    => $date->isFuture(),
         ];
+    }
+
+    private static function formatMinutes($minutes)
+    {
+        if ($minutes <= 0) {
+            return '0:00';
+        }
+
+        $hours = intdiv($minutes, 60);
+        $mins  = $minutes % 60;
+
+        return sprintf('%d:%02d', $hours, $mins);
+    }
+
+    public static function formatMonth(Collection $attendances)
+    {
+        return $attendances->map(fn($attendance) =>
+            AttendanceFormatter::formatSingle($attendance, Carbon::parse($attendance->date))
+        );
     }
 }

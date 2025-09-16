@@ -1,0 +1,195 @@
+.content {
+    background-color: #f0eff2;
+}
+
+.attendance__content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 50px 20px;
+    border-radius: 10px;
+}
+
+.attendance__title {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: left;
+    border-left: 8px solid #000000;
+    padding: 4px 20px;
+}
+
+.attendance__table {
+    width: 100%;
+    margin-top: 50px;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e1e1e1;
+}
+
+.detail__table--row,
+.attendance__break--row {
+    border-bottom: 2px solid #e1e1e1;
+    height: 100px;
+}
+
+.attendance__table tr:last-child {
+    border-bottom: none;
+}
+
+.table__label {
+    width: 25%;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 15px;
+    padding-left: 40px;
+    text-align: left;
+    background-color: #ffffff;
+    color: #737373;
+}
+
+.table__deta {
+    padding: 30px 120px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+.date,
+.clock,
+.break {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+}
+
+.year,
+.day,
+.clock-input,
+.break-input,
+textarea {
+    padding: 18px 12px;
+    font-size: 16px;
+    border: 1px solid #CCC;
+    border-radius: 6px;
+    text-align: center;
+    background: #ffffff;
+    height: 40px;
+    width: 120px;
+    font-weight: bold;
+}
+
+.input-date {
+    border: none;
+}
+
+textarea {
+    width: 100%;
+    height: 80px;
+    resize: none;
+    text-align: left;
+}
+
+.request__button {
+    display: block;
+    width: 120px;
+    margin-left: auto;
+    margin-top: 40px;
+    padding: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #000000;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.error__message {
+    margin-top: 5px;
+    color: #ff0000;
+    font-size: 16px;
+}
+
+.approve__message {
+    color: #ff0000;
+    display: block;
+    margin-left: auto;
+    margin-top: 15px;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: right;
+    opacity: 50%;
+    letter-spacing: 2px;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .attendance__content {
+        max-width: 90%;
+        padding: 15px;
+    }
+
+    .attendance__title {
+        font-size: 24px;
+        padding: 4px 15px;
+    }
+
+    .attendance__table {
+        border-radius: 10px;
+    }
+
+    .detail__table--row,
+    .attendance__break--row {
+        height: 100px;
+    }
+
+    .table__label {
+        font-size: 16px;
+    }
+
+    .table__deta {
+        padding: 30px 80px;
+        font-size: 16px;
+    }
+
+    .date,
+    .clock,
+    .break {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 5px;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .year,
+    .day,
+    .clock-input,
+    .break-input,
+    textarea {
+        width: 120px;
+    }
+
+    textarea {
+        width: 100%;
+        height: 80px;
+        resize: none;
+        text-align: left;
+    }
+
+    .request__button {
+        width: 100%;
+        max-width: 125px;
+        font-size: 18px;
+        margin-top: 40px;
+        padding: 10px 0;
+    }
+}

@@ -136,6 +136,18 @@
     font-weight: 700;
 }
 
+.attendance__detail.disabled {
+    color: #737373;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.attendance__detail.disabled a {
+    pointer-events: none;
+    color: inherit;
+    text-decoration: none;
+}
+
 /* レスポンシブ */
 @media (max-width: 768px) {
     .attendance__content {

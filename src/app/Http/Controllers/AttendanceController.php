@@ -23,11 +23,10 @@ class AttendanceController extends Controller
         $month = $request->query('month', Carbon::now()->format('Y/m'));
         $startOfMonth = Carbon::createFromFormat('Y/m', $month)->startOfMonth();
         $endOfMonth = Carbon::createFromFormat('Y/m', $month)->endOfMonth();
-        Attendance::ensureMonthlyRecords($user->id, $startOfMonth, $endOfMonth);
 
-        // 勤怠データを取得・フォーマットを整形
-        $attendanceRecords = Attendance::forUserInMonth($user->id, $startOfMonth, $endOfMonth);
-        $attendances = AttendanceFormatter::format($attendanceRecords, $startOfMonth, $endOfMonth);
+        // 勤怠データを取得・フォーマットして整形
+        $attendances = Attendance::getMonthlyAttendances($user->id, $startOfMonth, $endOfMonth);
+        $attendances = AttendanceFormatter::formatMonth($attendances);
 
         $months = CarbonCalc::getMonths($month);
         $prevMonthUrl = route('attendance.index', ['month' => $months['prevMonth']]);
