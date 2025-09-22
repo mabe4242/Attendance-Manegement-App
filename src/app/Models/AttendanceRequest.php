@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Enums\RequestStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class AttendanceRequest extends Model
 {
@@ -44,5 +46,41 @@ class AttendanceRequest extends Model
     public function breakRequests()
     {
         return $this->hasMany(BreakRequest::class);
+    }
+
+    public static function createWithBreaks(array $data, Attendance $attendance)
+    {
+        $clockIn = $data['clock_in'] ? (clone $attendance->date)->setTimeFromTimeString($data['clock_in']) : null;
+        $clockOut = $data['clock_out'] ? (clone $attendance->date)->setTimeFromTimeString($data['clock_out']) : null;
+
+        $attendanceRequest = self::create([
+            'user_id' => Auth::id(),
+            'attendance_id' => $attendance->id,
+            'request_date' => $attendance->date,
+            'clock_in' => $clockIn,
+            'clock_out' => $clockOut,
+            'status' => RequestStatus::PENDING,
+            'reason' => $data['reason'] ?? null,
+        ]);
+
+        foreach ($data['breaks'] ?? [] as $index => $breakData) {
+            $attendanceRequest->addBreakRequest($attendance, $index, $breakData);
+        }
+
+        return $attendanceRequest;
+    }
+
+    public function addBreakRequest(Attendance $attendance, int $index, array $breakData)
+    {
+        $breakStart = $breakData['break_start'] ?? null;
+        $breakEnd = $breakData['break_end'] ?? null;
+
+        if ($breakStart || $breakEnd) {
+            $this->breakRequests()->create([
+                'break_id' => $attendance->breaks[$index]->id ?? null,
+                'break_start' => $breakStart ? (clone $attendance->date)->setTimeFromTimeString($breakStart) : null,
+                'break_end' => $breakEnd ? (clone $attendance->date)->setTimeFromTimeString($breakEnd) : null,
+            ]);
+        }
     }
 }

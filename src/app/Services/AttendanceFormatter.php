@@ -8,6 +8,10 @@ use Illuminate\Support\Collection;
 
 class AttendanceFormatter
 {
+    private const MINUTES_PER_HOUR = 60;
+
+    private const ZERO_TIME_FORMAT = '0:00';
+
     private static function weekdayLabel($dayOfWeek)
     {
         $labels = ['日', '月', '火', '水', '木', '金', '土'];
@@ -47,11 +51,11 @@ class AttendanceFormatter
     private static function formatMinutes($minutes)
     {
         if ($minutes <= 0) {
-            return '0:00';
+            return self::ZERO_TIME_FORMAT;
         }
 
-        $hours = intdiv($minutes, 60);
-        $mins  = $minutes % 60;
+        $hours = intdiv($minutes, self::MINUTES_PER_HOUR);
+        $mins  = $minutes % self::MINUTES_PER_HOUR;
 
         return sprintf('%d:%02d', $hours, $mins);
     }
