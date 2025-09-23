@@ -1,3 +1,5 @@
+@php use App\Enums\AttendanceStatus; @endphp
+
 @extends('layouts.app')
 
 @section('css')
@@ -8,7 +10,6 @@
     <x-user_header></x-user_header>
     <div class="content__wrapper">
         <div class="content">
-            @php use App\Enums\AttendanceStatus; @endphp
             <x-attendance-clock :status="AttendanceStatus::label($attendance->status)"/>
             @if($attendance->status === AttendanceStatus::OFF)
                 <x-button route="attendance.store" text="出勤" />

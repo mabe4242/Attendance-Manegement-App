@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\DB;
 
 trait HandlesTransaction
 {
-    //DBトランザクションを実行し、例外時はリダイレクトしてフラッシュメッセージを返す
     public function handleTransaction(\Closure $callback, ?string $errorMessage = null)
     {
         try {

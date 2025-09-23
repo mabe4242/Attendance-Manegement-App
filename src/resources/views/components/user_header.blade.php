@@ -8,21 +8,21 @@
                 <ul class="header-nav">
                     @if (Auth::check())
                         <li class="header-nav__item">
+                            <a class="header-nav__link btn" href="{{ route('attendance.create') }}">勤怠</a>
+                        </li>
+                        <li class="header-nav__item">
+                            <a class="header-nav__link btn" href="{{ route('attendance.index') }}">勤怠一覧</a>
+                        </li>
+                        <li class="header-nav__item">
+                            <a class="header-nav__link btn" href="{{ route('attendance_requests.index') }}">申請</a>
+                        </li>
+                        <li class="header-nav__item">
                             <form class="form" action="/logout" method="post">
                                 @csrf
                                 <button class="header-nav__button btn">ログアウト</button>
                             </form>
                         </li>
-                    @else 
-                        <li class="header-nav__item">
-                            <form class="form" action="/login">
-                                <button class="header-nav__button btn">ログイン</button>
-                            </form>
-                        </li>
                     @endif
-                    <li class="header-nav__item">
-                        <a class="header-nav__link btn" href="">マイページ</a>
-                    </li>
                 </ul>
             </nav>
         </div>
