@@ -14,14 +14,14 @@
                 <x-table :headers="['日付', '出勤', '退勤', '休憩', '合計', '詳細']">
                     @foreach ($attendances as $attendance)
                         <tr>
-                            <td class="attendance__deta">
+                            <td class="attendance__data">
                                 {{ $attendance->date_display }}<span class="weekday">({{ $attendance->weekday }})</span>
                             </td>
-                            <td class="attendance__deta">{{ $attendance->clock_in }}</td>
-                            <td class="attendance__deta">{{ $attendance->clock_out }}</td>
-                            <td class="attendance__deta">{{ $attendance->break }}</td>
-                            <td class="attendance__deta">{{ $attendance->total_work }}</td>
-                            <td class="attendance__deta">
+                            <td class="attendance__data">{{ $attendance->clock_in }}</td>
+                            <td class="attendance__data">{{ $attendance->clock_out }}</td>
+                            <td class="attendance__data">{{ $attendance->break }}</td>
+                            <td class="attendance__data">{{ $attendance->total_work }}</td>
+                            <td class="attendance__data">
                                 @if ($attendance->is_future)
                                     <div class="attendance__detail disabled"><a href="#">詳細</a></div>
                                 @else

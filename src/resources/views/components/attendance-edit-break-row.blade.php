@@ -4,7 +4,7 @@
     <th class="table__label">
         {{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}
     </th>
-    <td class="table__deta">
+    <td class="table__data">
         <div class="break">
             <input type="text" name="breaks[{{ $index }}][break_start]" class="break-input"
                    value="{{ old("breaks.$index.break_start", $break->break_start_formatted ?? '') }}">

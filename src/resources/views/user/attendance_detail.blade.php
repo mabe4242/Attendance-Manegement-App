@@ -1,3 +1,5 @@
+@php use App\Enums\RequestStatus; @endphp
+
 @extends('layouts.app')
 
 @section('css')
@@ -10,7 +12,6 @@
         <div class="attendance__content">
             <div class="attendance__wrapper">
                 <p class="attendance__title">勤怠詳細</p>
-                @php use App\Enums\RequestStatus; @endphp
                 @if(isset($attendanceRequest) && $attendanceRequest->status == RequestStatus::PENDING)
                     <x-attendance-approve-view :attendanceRequest="$attendanceRequest" :breaks="$breaks" />
                 @else

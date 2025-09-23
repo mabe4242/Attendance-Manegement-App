@@ -114,7 +114,7 @@
     color: #737373;
 }
 
-.attendance__deta {
+.attendance__data {
     border-top: 2px solid #e1e1e1;
     padding: 10px;
     text-align: center;
@@ -182,7 +182,7 @@
     }
 
     .attendance__column,
-    .attendance__deta {
+    .attendance__data {
         font-size: 14px;
         padding: 8px;
     }

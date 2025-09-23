@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AttendanceStatus;
 use App\Enums\RequestStatus;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
@@ -38,7 +39,7 @@ class AttendanceRequestController extends Controller
         $dateCarbon = Carbon::parse($date);
         $attendance = Attendance::firstOrCreate(
             ['user_id' => $userId, 'date' => $dateCarbon->toDateString()],
-            ['status' => 0]
+            ['status' => AttendanceStatus::OFF]
         );
 
         return redirect()->route('attendance.detail', ['id' => $attendance->id]);
