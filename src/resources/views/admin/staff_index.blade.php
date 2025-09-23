@@ -17,7 +17,7 @@
                                 <td class="attendance__data">{{ $user->user_name }}</td>
                                 <td class="attendance__data">{{ $user->email }}</td>
                                 <td class="attendance__data">
-                                    <a class="attendance__detail" href="#">詳細</a>
+                                    <a class="attendance__detail" href="{{route('admin.staff_attendance', ['id' => $user->id])}}">詳細</a>
                                 </td>
                             </tr>
                         @endforeach
