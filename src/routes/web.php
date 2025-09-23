@@ -28,6 +28,6 @@ Route::prefix('admin')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
 
     Route::middleware(['auth:admin'])->group(function () {
-        Route::get('/attendance/list', [AdminAttendanceController::class, 'index']);
+        Route::get('/attendance/list', [AdminAttendanceController::class, 'index'])->name('admin.attendance.index');
     });
 });
