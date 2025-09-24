@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Enums\AttendanceStatus;
+use App\Enums\TableHeaders;
 use App\Models\Attendance;
 use App\Services\AttendanceFormatter;
+use App\Services\AttendanceService;
 use App\Services\CarbonCalc;
 use App\Traits\HandlesTransaction;
 use Carbon\Carbon;
@@ -25,14 +27,16 @@ class AttendanceController extends Controller
         $endOfMonth = Carbon::createFromFormat('Y/m', $month)->endOfMonth();
 
         // 勤怠データを取得・フォーマットして整形
-        $attendances = Attendance::getMonthlyAttendances($user->id, $startOfMonth, $endOfMonth);
+        $attendances = AttendanceService::getMonthlyAttendances($user->id, $startOfMonth, $endOfMonth);
         $attendances = AttendanceFormatter::formatMonth($attendances);
 
         $months = CarbonCalc::getMonths($month);
         $prevMonthUrl = route('attendance.index', ['month' => $months['prevMonth']]);
         $nextMonthUrl = route('attendance.index', ['month' => $months['nextMonth']]);
+        $headers = TableHeaders::attendanceMonthly();
 
-        return view('user.attendance_index', compact('attendances', 'month', 'prevMonthUrl', 'nextMonthUrl'));
+        return view('user.attendance_index', compact('attendances', 'month', 'prevMonthUrl',
+            'nextMonthUrl', 'headers'));
     }
 
     public function create(Request $request)
@@ -54,7 +58,7 @@ class AttendanceController extends Controller
         $now = now();
 
         return $this->handleTransaction(function () use ($userId, $now) {
-            $attendance = Attendance::getOrCreateToday($userId, $now, AttendanceStatus::OFF);
+            $attendance = AttendanceService::getOrCreateToday($userId, $now, AttendanceStatus::OFF);
 
             if ($attendance->status !== AttendanceStatus::OFF) {
                 return back();

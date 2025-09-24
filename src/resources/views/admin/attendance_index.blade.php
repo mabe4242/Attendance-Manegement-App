@@ -11,7 +11,7 @@
             <div class="attendance__wrapper">
                 <p class="attendance__title">{{ $date->isoFormat('YYYY年M月D日') }}の勤怠</p>
                 <x-table-menu :prevUrl="$prevUrl" :main="$date->format('Y/m/d')" :nextUrl="$nextUrl" prev="前日" next="翌日"/>
-                <x-table :headers="['名前', '出勤', '退勤', '休憩', '合計', '詳細']">
+                <x-table :headers=$headers>
                     @foreach ($attendances as $attendance)
                         <tr>
                             <td class="attendance__data">{{ $attendance->userName }}</td>

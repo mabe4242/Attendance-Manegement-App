@@ -13,7 +13,7 @@
             <div class="attendance__wrapper">
                 <p class="attendance__title">申請一覧</p>
                 <x-nav :status="$status" routeName="admin.attendance_requests.index" />
-                <x-table :headers="['状態', '名前', '対象日時', '申請理由', '申請日時', '詳細']">
+                <x-table :headers=$headers>
                     @foreach ($attendanceRequests as $request)
                         <tr>
                             <td class="attendance__data">{{ RequestStatus::label($request->status) }}</td>

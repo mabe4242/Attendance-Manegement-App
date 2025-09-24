@@ -11,7 +11,7 @@
             <div class="attendance__wrapper">
                 <p class="attendance__title">スタッフ一覧</p>
                 <div class="attendance__staff-wrapper">
-                    <x-table :headers="['名前', 'メールアドレス', '月次勤怠']">
+                    <x-table :headers=$headers>
                         @foreach ($users as $user)
                             <tr>
                                 <td class="attendance__data">{{ $user->user_name }}</td>
