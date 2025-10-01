@@ -52,4 +52,55 @@ class AttendanceService
     {
         return Attendance::with(['user', 'breaks'])->whereDate('date', $date)->get();
     }
+
+    public static function updateAttendance(Attendance $attendance, array $data)
+    {
+        $date = self::buildDate($data['year'], $data['month_day']);
+
+        $attendance->update([
+            'date'      => $date,
+            'clock_in'  => self::buildDateTime($date, $data['clock_in'] ?? null),
+            'clock_out' => self::buildDateTime($date, $data['clock_out'] ?? null),
+            'reason'    => $data['reason'] ?? null,
+        ]);
+    }
+
+    public static function updateBreaks(Attendance $attendance, array $breaks, string $year, string $monthDay)
+    {
+        $date = self::buildDate($year, $monthDay);
+
+        foreach ($breaks as $breakData) {
+            if (empty($breakData['break_start']) && empty($breakData['break_end'])) {
+                continue;
+            }
+
+            $breakStart = self::buildDateTime($date, $breakData['break_start'] ?? null);
+            $breakEnd   = self::buildDateTime($date, $breakData['break_end'] ?? null);
+
+            if (!empty($breakData['id'])) {
+                $break = $attendance->breaks->firstWhere('id', $breakData['id']);
+                if ($break) {
+                    $break->update([
+                        'break_start' => $breakStart,
+                        'break_end'   => $breakEnd,
+                    ]);
+                }
+            } else {
+                $attendance->breaks()->create([
+                    'break_start' => $breakStart,
+                    'break_end'   => $breakEnd,
+                ]);
+            }
+        }
+    }
+
+    private static function buildDate(string $year, string $monthDay)
+    {
+        return Carbon::createFromFormat('Y年n月j日', $year . $monthDay)->toDateString();
+    }
+
+    private static function buildDateTime(string $date, ?string $time)
+    {
+        return $time ? Carbon::parse("{$date} {$time}") : null;
+    }
 }

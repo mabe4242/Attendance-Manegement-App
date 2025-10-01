@@ -25,14 +25,15 @@
                                 @if ($attendance->is_future)
                                     <div class="attendance__detail disabled"><a href="#">詳細</a></div>
                                 @else
-                                    <a class="attendance__detail" href="#">詳細</a>
+                                    <a class="attendance__detail" href="{{ route('admin.detail_or_create', 
+                                        ['user' => $user->id, 'date' => $attendance->date->toDateString()]) }}">詳細</a>
                                 @endif
                             </td>
                         </tr>
                     @endforeach
                 </x-table>
                 <div class="export-button">
-                    <a href="#" class="export-button__text">CSV出力</a>
+                    <a href="" class="export-button__text">CSV出力</a>
                 </div>
             </div>
         </div>

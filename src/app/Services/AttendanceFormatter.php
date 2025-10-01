@@ -9,7 +9,6 @@ use Illuminate\Support\Collection;
 class AttendanceFormatter
 {
     private const MINUTES_PER_HOUR = 60;
-    
     private const ZERO_TIME_FORMAT = '0:00';
 
     private static function weekdayLabel($dayOfWeek)

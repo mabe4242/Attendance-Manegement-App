@@ -20,7 +20,7 @@
                             <td class="attendance__data">{{ $attendance->break }}</td>
                             <td class="attendance__data">{{ $attendance->total_work }}</td>
                             <td class="attendance__data">
-                                <a class="attendance__detail" href="#">詳細</a>
+                                <a class="attendance__detail" href="{{ route('admin.attendance.show', $attendance->id) }}">詳細</a>
                             </td>
                         </tr>
                     @endforeach

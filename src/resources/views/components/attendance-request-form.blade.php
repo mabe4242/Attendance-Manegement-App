@@ -1,9 +1,18 @@
-@props(['attendance', 'breaks', 'errors'])
+@props([
+    'attendance', 
+    'breaks', 
+    'errors', 
+    'formAction', 
+    'method' => 'POST'
+])
 
-<form action="{{ route('attendance_request.store', $attendance->id) }}" class="attendance_detail" method="POST">
+<form action="{{ $formAction }}" class="attendance_detail" method="POST">
     @csrf
+    @if(strtoupper($method) !== 'POST')
+        @method($method)
+    @endif
     <table class="attendance__table">
-        <x-attendance-edit-row label="名前">{{ Auth::user()->name }}</x-attendance-edit-row>
+        <x-attendance-edit-row label="名前">{{ $attendance->user->name }}</x-attendance-edit-row>
         <x-attendance-edit-row label="日付">
             <div class="date">
                 <input type="text" name="year" class="year input-date" value="{{ old('year', $attendance->year) }}">
@@ -31,7 +40,7 @@
         @endforeach
         <x-attendance-edit-break-row :index="count($breaks)" :break="[]" :errors="$errors" />
         <x-attendance-edit-row label="備考">
-            <textarea name="reason">{{ old('reason') }}</textarea>
+            <textarea name="reason">{{ old('reason', $attendance->reason ?? '') }}</textarea>
             @error('reason')
                 <p class="error__message">{{ $message }}</p>
             @enderror
