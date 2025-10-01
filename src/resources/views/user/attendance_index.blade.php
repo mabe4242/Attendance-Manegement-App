@@ -5,13 +5,13 @@
 @endsection
 
 @section('content')
-    <x-user_header></x-user_header>
+    <x-user_header />
     <div class="content">
         <div class="attendance__content">
             <div class="attendance__wrapper">
                 <p class="attendance__title">勤怠一覧</p>
-                <x-table-menu :prevMonthUrl="$prevMonthUrl" :month="$month" :nextMonthUrl="$nextMonthUrl" />
-                <x-table :headers="['日付', '出勤', '退勤', '休憩', '合計', '詳細']">
+                <x-table-menu :prevUrl="$prevMonthUrl" :main="$month" :nextUrl="$nextMonthUrl" prev="前月" next="翌月"/>
+                <x-table :headers=$headers>
                     @foreach ($attendances as $attendance)
                         <tr>
                             <td class="attendance__data">

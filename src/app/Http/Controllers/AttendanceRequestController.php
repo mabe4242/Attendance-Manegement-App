@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\AttendanceStatus;
 use App\Enums\RequestStatus;
+use App\Enums\TableHeaders;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
 use App\Traits\HandlesTransaction;
@@ -29,8 +30,9 @@ class AttendanceRequestController extends Controller
         $status = $request->input('status', RequestStatus::PENDING);
         $query = AttendanceRequest::where('user_id', Auth::id())->where('status', $status);
         $attendanceRequests = $query->latest()->get();
+        $headers = TableHeaders::requests();
 
-        return view('user.request_index', compact('attendanceRequests', 'status'));
+        return view('user.request_index', compact('attendanceRequests', 'status', 'headers'));
     }
 
     public function detailOrCreate($date)

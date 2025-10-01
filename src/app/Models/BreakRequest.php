@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
+use App\Traits\HasBreakFormatting;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class BreakRequest extends Model
 {
     use HasFactory;
+    
+    use HasBreakFormatting;
 
     protected $fillable = [
         'attendance_request_id',
@@ -30,15 +32,5 @@ class BreakRequest extends Model
     public function break()
     {
         return $this->belongsTo(UserBreak::class);
-    }
-
-    public function getBreakStartFormattedAttribute()
-    {
-        return $this->break_start ? Carbon::parse($this->break_start)->format('H:i') : null;
-    }
-
-    public function getBreakEndFormattedAttribute()
-    {
-        return $this->break_end ? Carbon::parse($this->break_end)->format('H:i') : null;
     }
 }

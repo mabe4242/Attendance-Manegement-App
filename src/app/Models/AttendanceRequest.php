@@ -83,4 +83,18 @@ class AttendanceRequest extends Model
             ]);
         }
     }
+
+    public function scopeStatus($query, $status)
+    {
+        if ($status !== null) {
+            return $query->where('status', $status);
+        }
+        return $query;
+    }
+
+    public function scopeLatestOrder($query)
+    {
+        return $query->orderBy('request_date', 'desc')
+                     ->orderBy('created_at', 'desc');
+    }
 }
