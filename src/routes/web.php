@@ -39,5 +39,6 @@ Route::prefix('admin')->group(function () {
         Route::put('/attendance/{id}', [AdminAttendanceController::class, 'update'])->name('admin.attendance.update');
         Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [AdminAttendanceRequestController::class, 'show'])->name('admin.request');
         Route::post('/stamp_correction_request/approve/{attendance_correct_request}', [AdminAttendanceRequestController::class, 'approve'])->name('admin.approve');
+        Route::get('/attendance/staff/{id}/csv', [AdminAttendanceController::class, 'export'])->name('admin.csv');
     });
 });

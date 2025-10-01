@@ -82,4 +82,21 @@ class AttendanceController extends Controller
             return redirect()->route('admin.attendance.index');
         }, '勤怠の更新に失敗しました。');
     }
+
+    public function export(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $month = $request->query('month', Carbon::now()->format('Y/m'));
+        $start = Carbon::createFromFormat('Y/m', $month)->startOfMonth();
+        $end   = Carbon::createFromFormat('Y/m', $month)->endOfMonth();
+
+        $fileName = "{$user->user_name}_勤怠一覧_{$start->format('Ym')}.csv";
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+        ];
+
+        return response()->stream(AttendanceService::exportMonthly($user, $start, $end), 200, $headers);
+    }
 }

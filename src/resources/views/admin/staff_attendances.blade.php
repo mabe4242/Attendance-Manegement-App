@@ -33,7 +33,7 @@
                     @endforeach
                 </x-table>
                 <div class="export-button">
-                    <a href="" class="export-button__text">CSV出力</a>
+                    <a href="{{ route('admin.csv', ['id' => $user->id]) }}?month={{ $month }}" class="export-button__text">CSV出力</a>
                 </div>
             </div>
         </div>

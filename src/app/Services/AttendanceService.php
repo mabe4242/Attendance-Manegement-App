@@ -2,8 +2,11 @@
 
 namespace App\Services;
 
+use App\Enums\TableHeaders;
 use App\Models\Attendance;
+use App\Models\User;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 class AttendanceService
 {
@@ -102,5 +105,36 @@ class AttendanceService
     private static function buildDateTime(string $date, ?string $time)
     {
         return $time ? Carbon::parse("{$date} {$time}") : null;
+    }
+
+    // CSVの生成処理(スタッフの月次勤怠)
+    public static function exportMonthly(User $user, Carbon $start, Carbon $end)
+    {
+        return function () use ($user, $start, $end) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, TableHeaders::csvMonthly());
+
+            $attendances = Attendance::with('breaks')
+                ->where('user_id', $user->id)
+                ->whereBetween('date', [$start, $end])
+                ->get()
+                ->keyBy(fn($item) => $item->date->toDateString());
+
+            $period = CarbonPeriod::create($start, $end);
+            foreach ($period as $date) {
+                $attendance = $attendances->get($date->toDateString());
+
+                fputcsv($handle, [
+                    $date->format('Y-m-d'),
+                    $date->translatedFormat('D'),
+                    $attendance?->clock_in_formatted ?? '',
+                    $attendance?->clock_out_formatted ?? '',
+                    $attendance?->breaks_total_formatted ?? '',
+                    $attendance?->total_work_formatted ?? '',
+                ]);
+            }
+
+            fclose($handle);
+        };
     }
 }
