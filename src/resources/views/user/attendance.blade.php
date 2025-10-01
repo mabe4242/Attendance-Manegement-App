@@ -7,7 +7,7 @@
 @endsection
 
 @section('content')
-    <x-user_header></x-user_header>
+    <x-user_header />
     <div class="content__wrapper">
         <div class="content">
             <x-attendance-clock :status="AttendanceStatus::label($attendance->status)"/>

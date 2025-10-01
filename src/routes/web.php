@@ -37,5 +37,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/attendance/{user}/detail_or_create/{date}', [AdminAttendanceController::class, 'detailOrCreate'])->name('admin.detail_or_create');
         Route::get('/attendance/{id}', [AdminAttendanceController::class, 'show'])->name('admin.attendance.show');
         Route::put('/attendance/{id}', [AdminAttendanceController::class, 'update'])->name('admin.attendance.update');
+        Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [AdminAttendanceRequestController::class, 'show'])->name('admin.request');
+        Route::post('/stamp_correction_request/approve/{attendance_correct_request}', [AdminAttendanceRequestController::class, 'approve'])->name('admin.approve');
     });
 });

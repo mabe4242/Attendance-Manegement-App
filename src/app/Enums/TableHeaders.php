@@ -11,6 +11,7 @@ class TableHeaders
     const TOTAL      = '合計';
     const DETAIL     = '詳細';
     const DATE       = '日付';
+    const DAY_WEEK   = '曜日';
     const STATUS     = '状態';
     const TARGET_DATETIME = '対象日時';
     const REASON     = '申請理由';
@@ -60,6 +61,18 @@ class TableHeaders
             self::NAME,
             self::EMAIL,
             self::MONTHLY,
+        ];
+    }
+
+    public static function csvMonthly()
+    {
+        return [
+            self::DATE,
+            self::DAY_WEEK,
+            self::CLOCK_IN,
+            self::CLOCK_OUT,
+            self::BREAK,
+            self::TOTAL,
         ];
     }
 }
