@@ -13,6 +13,7 @@ use App\Services\CarbonCalc;
 use App\Traits\HandlesTransaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AttendanceController extends Controller
 {
@@ -97,6 +98,6 @@ class AttendanceController extends Controller
             'Content-Disposition' => "attachment; filename=\"$fileName\"",
         ];
 
-        return response()->stream(AttendanceService::exportMonthly($user, $start, $end), 200, $headers);
+        return response()->stream(AttendanceService::exportMonthly($user, $start, $end), Response::HTTP_OK, $headers);
     }
 }
