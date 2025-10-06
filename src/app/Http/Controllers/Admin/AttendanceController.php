@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\AttendanceStatus;
 use App\Enums\TableHeaders;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateRequest;
 use App\Models\Attendance;
 use App\Models\User;
 use App\Services\AttendanceFormatter;
@@ -72,7 +73,7 @@ class AttendanceController extends Controller
         return redirect()->route('admin.attendance.show', ['id' => $attendance->id]);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         return $this->handleTransaction(function () use ($request, $id) {
             $attendance = Attendance::with('breaks')->findOrFail($id);

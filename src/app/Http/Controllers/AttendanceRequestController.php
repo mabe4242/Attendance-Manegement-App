@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\AttendanceStatus;
 use App\Enums\RequestStatus;
 use App\Enums\TableHeaders;
+use App\Http\Requests\UpdateRequest;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
 use App\Traits\HandlesTransaction;
@@ -48,7 +49,7 @@ class AttendanceRequestController extends Controller
         return redirect()->route('attendance.detail', ['id' => $attendance->id, 'from' => 'attendance_list']);
     }
 
-    public function store(Request $request, $attendanceId)
+    public function store(UpdateRequest $request, $attendanceId)
     {
         $attendance = Attendance::with('breaks')->findOrFail($attendanceId);
         $attendanceRequest = $this->handleTransaction(function () use ($request, $attendance) {

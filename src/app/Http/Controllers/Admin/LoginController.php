@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminLoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +14,7 @@ class LoginController extends Controller
         return view('admin.login');
     }
 
-    public function login(Request $request)
+    public function login(AdminLoginRequest $request)
     {
         $credentials = $request->only('email', 'password');
 
@@ -24,7 +25,7 @@ class LoginController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'ログイン情報が正しくありません。',
+            'email' => 'ログイン情報が登録されていません',
         ]);
     }
 
