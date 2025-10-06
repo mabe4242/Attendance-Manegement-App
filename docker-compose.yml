@@ -15,6 +15,16 @@ services:
     build: ./docker/php
     volumes:
       - ./src:/var/www/
+    environment:
+      MAIL_MAILER: smtp
+      MAIL_HOST: mailhog
+      MAIL_PORT: 1025
+      MAIL_USERNAME: null
+      MAIL_PASSWORD: null
+      MAIL_ENCRYPTION: null
+    depends_on:
+      - mysql
+      - mailhog
 
   mysql:
     image: mysql:8.0.26
@@ -40,3 +50,9 @@ services:
       - mysql
     ports:
       - 8080:80
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"

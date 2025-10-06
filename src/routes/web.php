@@ -7,10 +7,13 @@ use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\AttendanceController as UserAttendanceController;
 use App\Http\Controllers\AttendanceRequestController as UserAttendanceRequestController;
 use App\Http\Controllers\BreakController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
 
 // ユーザー認証
-Route::middleware(['auth:web'])->group(function () {
+Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::get('/attendance', [UserAttendanceController::class, 'create'])->name('attendance.create');
     Route::post('/attendance', [UserAttendanceController::class, 'store'])->name('attendance.store');
     Route::post('/attendance/checkout', [UserAttendanceController::class, 'checkout'])->name('attendance.checkout');
@@ -42,3 +45,16 @@ Route::prefix('admin')->group(function () {
         Route::get('/attendance/staff/{id}/csv', [AdminAttendanceController::class, 'export'])->name('admin.csv');
     });
 });
+
+// メール認証に関するルート
+Route::get('/email/verify', function () {
+    return view('user.verify_email');
+})->middleware(['auth:web'])->name('verification.notice');
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/attendance');
+})->middleware(['auth:web', 'signed'])->name('verification.verify');
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('status', 'verification-link-sent');
+})->middleware(['auth:web', 'throttle:6,1'])->name('verification.send');

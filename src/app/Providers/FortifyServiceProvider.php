@@ -3,14 +3,12 @@
 namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
-use App\Actions\Fortify\LoginResponse;
 use App\Http\Requests\UserLoginRequest;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
-use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Http\Requests\LoginRequest as FortifyLoginRequest;
 
@@ -21,7 +19,7 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
+        //
     }
 
     /**
@@ -35,6 +33,10 @@ class FortifyServiceProvider extends ServiceProvider
             return view('user.register');
         });
 
+        Fortify::verifyEmailView(function () {
+            return view('user.verify_email');
+        });
+
         Fortify::loginView(function () {
             return view('user.login');
         });
@@ -42,7 +44,7 @@ class FortifyServiceProvider extends ServiceProvider
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->email;
 
-            return Limit::perMinute(10)->by($email . $request->ip());
+            return Limit::perMinute(10)->by($email.$request->ip());
         });
 
         $this->app->bind(FortifyLoginRequest::class, UserLoginRequest::class);
@@ -59,8 +61,6 @@ class FortifyServiceProvider extends ServiceProvider
                     return Auth::guard('web')->user();
                 }
             }
-
-            return null;
         });
     }
 }

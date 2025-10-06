@@ -45,3 +45,16 @@
 .button-submit {
     text-decoration: none;
 }
+
+.resend__link {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.resend__link:hover {
+    color: #0056b3;
+}
