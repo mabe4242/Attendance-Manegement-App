@@ -13,7 +13,6 @@ trait HandlesTransaction
                 return $callback();
             });
         } catch (\Throwable $e) {
-            // ログに記録
             report($e);
 
             return back()->with('error', $errorMessage ?? '処理中にエラーが発生しました。');

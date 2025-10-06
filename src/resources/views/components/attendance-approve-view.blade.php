@@ -1,7 +1,9 @@
 @props(['attendanceRequest', 'breaks'])
 
 <table class="attendance__table">
-    <x-attendance-edit-row label="名前">{{ $attendanceRequest->user->name }}</x-attendance-edit-row>
+    <x-attendance-edit-row label="名前">
+        {{ $attendanceRequest?->user?->name ?? '未申請' }}
+    </x-attendance-edit-row>
     <x-attendance-edit-row label="日付">
         <div class="date">
             <p class="year input-date">{{ $attendanceRequest->request_date->format('Y年') }}</p>
@@ -26,4 +28,3 @@
         <p>{{ $attendanceRequest->reason }}</p>
     </x-attendance-edit-row>
 </table>
-<p class="approve__message">*承認待ちのため修正はできません。</p>

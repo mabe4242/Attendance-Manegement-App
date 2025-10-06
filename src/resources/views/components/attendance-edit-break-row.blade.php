@@ -6,6 +6,7 @@
     </th>
     <td class="table__data">
         <div class="break">
+            <input type="hidden" name="breaks[{{ $index }}][id]" value="{{ $break->id ?? '' }}">
             <input type="text" name="breaks[{{ $index }}][break_start]" class="break-input"
                    value="{{ old("breaks.$index.break_start", $break->break_start_formatted ?? '') }}">
             <span>~</span>

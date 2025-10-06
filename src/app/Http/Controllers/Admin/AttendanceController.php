@@ -10,11 +10,15 @@ use App\Models\User;
 use App\Services\AttendanceFormatter;
 use App\Services\AttendanceService;
 use App\Services\CarbonCalc;
+use App\Traits\HandlesTransaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AttendanceController extends Controller
 {
+    use HandlesTransaction;
+
     public function index(Request $request)
     {
         $date = $request->query('date') ? Carbon::parse($request->query('date'))->startOfDay() : Carbon::today();
@@ -66,5 +70,34 @@ class AttendanceController extends Controller
         );
 
         return redirect()->route('admin.attendance.show', ['id' => $attendance->id]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        return $this->handleTransaction(function () use ($request, $id) {
+            $attendance = Attendance::with('breaks')->findOrFail($id);
+            AttendanceService::updateAttendance($attendance, $request->all());
+            AttendanceService::updateBreaks($attendance, $request->breaks ?? [], 
+                $request->year, $request->month_day);
+
+            return redirect()->route('admin.attendance.index');
+        }, '勤怠の更新に失敗しました。');
+    }
+
+    public function export(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $month = $request->query('month', Carbon::now()->format('Y/m'));
+        $start = Carbon::createFromFormat('Y/m', $month)->startOfMonth();
+        $end   = Carbon::createFromFormat('Y/m', $month)->endOfMonth();
+
+        $fileName = "{$user->user_name}_勤怠一覧_{$start->format('Ym')}.csv";
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+        ];
+
+        return response()->stream(AttendanceService::exportMonthly($user, $start, $end), Response::HTTP_OK, $headers);
     }
 }
