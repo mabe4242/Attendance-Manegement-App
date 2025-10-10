@@ -1,0 +1,104 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Enums\AttendanceStatus;
+use App\Enums\TableHeaders;
+use App\Models\Attendance;
+use App\Services\AttendanceFormatter;
+use App\Services\AttendanceService;
+use App\Services\CarbonCalc;
+use App\Traits\HandlesTransaction;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class AttendanceController extends Controller
+{
+    use HandlesTransaction;
+
+    public function index(Request $request)
+    {
+        $user = Auth::user();
+
+        // リクエストされた月を取得
+        $month = $request->query('month', Carbon::now()->format('Y/m'));
+        $startOfMonth = Carbon::createFromFormat('Y/m', $month)->startOfMonth();
+        $endOfMonth = Carbon::createFromFormat('Y/m', $month)->endOfMonth();
+
+        // 勤怠データを取得・フォーマットして整形
+        $attendances = AttendanceService::getMonthlyAttendances($user->id, $startOfMonth, $endOfMonth);
+        $attendances = AttendanceFormatter::formatMonth($attendances);
+
+        $months = CarbonCalc::getMonths($month);
+        $prevMonthUrl = route('attendance.index', ['month' => $months['prevMonth']]);
+        $nextMonthUrl = route('attendance.index', ['month' => $months['nextMonth']]);
+        $headers = TableHeaders::attendanceMonthly();
+
+        return view('user.attendance_index', compact('attendances', 'month', 'prevMonthUrl',
+            'nextMonthUrl', 'headers'));
+    }
+
+    public function create(Request $request)
+    {
+        $userId = Auth::id();
+        $today = now()->toDateString();
+
+        $attendance = Attendance::firstOrCreate(
+            ['user_id' => $userId, 'date' => $today],
+            ['status' => AttendanceStatus::OFF]
+        )->load('breaks');
+
+        return view('user.attendance', compact('attendance'));
+    }
+
+    public function store()
+    {
+        $userId = Auth::id();
+        $now = now();
+
+        return $this->handleTransaction(function () use ($userId, $now) {
+            $attendance = AttendanceService::getOrCreateToday($userId, $now, AttendanceStatus::OFF);
+
+            if ($attendance->status !== AttendanceStatus::OFF) {
+                return back();
+            }
+
+            $attendance->update([
+                'clock_in' => $now,
+                'status' => AttendanceStatus::WORKING,
+            ]);
+
+            return redirect()->route('attendance.create');
+        }, '出勤打刻処理に失敗しました。');
+    }
+
+    public function checkout()
+    {
+        $userId = Auth::id();
+        $now = now();
+
+        return $this->handleTransaction(function () use ($userId, $now) {
+            $attendance = Attendance::forTodayWithLock($userId, $now)->firstOrFail();
+
+            if (! in_array($attendance->status, [AttendanceStatus::WORKING, AttendanceStatus::BREAK], true)) {
+                return back();
+            }
+
+            // 休憩中なら自動で休憩を閉じる
+            if ($attendance->status === AttendanceStatus::BREAK) {
+                $open = $attendance->openBreak();
+                if ($open) {
+                    $open->update(['break_end' => $now]);
+                }
+            }
+
+            $attendance->update([
+                'clock_out' => $now,
+                'status' => AttendanceStatus::FINISHED,
+            ]);
+
+            return redirect()->route('attendance.create');
+        }, '退勤打刻処理に失敗しました。');
+    }
+}
