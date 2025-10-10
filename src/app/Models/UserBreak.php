@@ -5,11 +5,12 @@ namespace App\Models;
 use App\Traits\HasBreakFormatting;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class UserBreak extends Model
 {
-    use HasBreakFormatting;
+    use HasFactory, HasBreakFormatting;
 
     protected $table = 'breaks';
 
