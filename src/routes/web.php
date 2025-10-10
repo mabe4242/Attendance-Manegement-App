@@ -28,11 +28,13 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
 // 管理者認証
 Route::prefix('admin')->group(function () {
-    Route::get('/login', [LoginController::class, 'create'])->name('admin.loginForm');
-    Route::post('/login', [LoginController::class, 'login'])->name('admin.login');
-    Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
+    Route::middleware('guest:admin')->group(function () {
+        Route::get('/login', [LoginController::class, 'create'])->name('admin.loginForm');
+        Route::post('/login', [LoginController::class, 'login'])->name('admin.login');
+    });
 
     Route::middleware(['auth:admin'])->group(function () {
+        Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
         Route::get('/attendance/list', [AdminAttendanceController::class, 'index'])->name('admin.attendance.index');
         Route::get('/staff/list', [StaffController::class, 'index'])->name('admin.staff.index');
         Route::get('/stamp_correction_request/list', [AdminAttendanceRequestController::class, 'index'])->name('admin.attendance_requests.index');
