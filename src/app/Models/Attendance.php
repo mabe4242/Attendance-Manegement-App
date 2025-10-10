@@ -5,12 +5,13 @@ namespace App\Models;
 use App\Traits\AttendanceFormat;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Attendance extends Model
 {
-    use AttendanceFormat;
+    use HasFactory, AttendanceFormat;
 
     protected $fillable = [
         'user_id',
@@ -18,6 +19,7 @@ class Attendance extends Model
         'clock_in',
         'clock_out',
         'status',
+        'reason',
     ];
 
     protected $casts = [

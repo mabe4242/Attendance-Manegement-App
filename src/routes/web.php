@@ -57,3 +57,6 @@ Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return back()->with('status', 'verification-link-sent');
 })->middleware(['auth:web', 'throttle:6,1'])->name('verification.send');
+Route::get('/', function () {
+    return redirect('/attendance');
+});
