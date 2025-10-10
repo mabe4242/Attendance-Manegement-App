@@ -9,6 +9,7 @@ use App\Http\Controllers\AttendanceRequestController as UserAttendanceRequestCon
 use App\Http\Controllers\BreakController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // ユーザー認証
@@ -57,6 +58,13 @@ Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return back()->with('status', 'verification-link-sent');
 })->middleware(['auth:web', 'throttle:6,1'])->name('verification.send');
+
 Route::get('/', function () {
-    return redirect('/attendance');
+    if (Auth::guard('web')->check()) {
+        return redirect('/attendance');
+    }
+    if (Auth::guard('admin')->check()) {
+        return redirect('/admin/attendance/list');
+    }
+    return redirect('/login');
 });
