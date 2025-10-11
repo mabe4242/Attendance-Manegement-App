@@ -32,7 +32,6 @@ Route::prefix('admin')->group(function () {
         Route::get('/login', [LoginController::class, 'create'])->name('admin.loginForm');
         Route::post('/login', [LoginController::class, 'login'])->name('admin.login');
     });
-
     Route::middleware(['auth:admin'])->group(function () {
         Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
         Route::get('/attendance/list', [AdminAttendanceController::class, 'index'])->name('admin.attendance.index');
