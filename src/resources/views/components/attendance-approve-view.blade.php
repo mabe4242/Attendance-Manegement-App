@@ -4,8 +4,8 @@
     <x-attendance-edit-row label="名前">
         {{ $attendanceRequest?->user?->name ?? '未申請' }}
     </x-attendance-edit-row>
-    <x-attendance-edit-row label="日付">
-        <div class="date">
+    <x-attendance-edit-row label="日付" class="request-row">
+        <div class="date attendance_request_date">
             <p class="year input-date">{{ $attendanceRequest->request_date->format('Y年') }}</p>
             <p class="day input-date">{{ $attendanceRequest->request_date->format('n月j日') }}</p>
         </div>

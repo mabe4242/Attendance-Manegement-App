@@ -3,7 +3,7 @@
 @extends('layouts.app')
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/admin/attendance_request.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin/attendance_approve.css') }}">
 @endsection
 
 @section('content')

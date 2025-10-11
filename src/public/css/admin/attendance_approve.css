@@ -130,6 +130,41 @@ textarea {
     letter-spacing: 2px;
 }
 
+.approve__button {
+    display: block;
+    width: 120px;
+    margin-left: auto;
+    margin-top: 40px;
+    padding: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #000000;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    letter-spacing: 3px;
+}
+
+.disabled__button {
+    display: block;
+    width: 120px;
+    margin-left: auto;
+    margin-top: 40px;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #696969;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    letter-spacing: 2px;
+    opacity: 90%;
+    cursor: not-allowed;
+}
+
 .table__data {
     padding: 30px 120px;
 }

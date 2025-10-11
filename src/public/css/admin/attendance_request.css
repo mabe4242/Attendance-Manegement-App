@@ -165,6 +165,24 @@ textarea {
     cursor: not-allowed;
 }
 
+.table__data {
+    padding: 30px 120px;
+}
+
+.staff_name {
+    padding-left: 35px;
+}
+
+.input-date[readonly] {
+    cursor: default;
+}
+
+.input-date[readonly]:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: inherit;
+}
+
 .attendance__content {
     transform: scale(0.9);
     transform-origin: top center;

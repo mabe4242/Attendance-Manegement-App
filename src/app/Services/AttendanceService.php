@@ -124,13 +124,29 @@ class AttendanceService
             foreach ($period as $date) {
                 $attendance = $attendances->get($date->toDateString());
 
+                if ($attendance) {
+                    $breaksTotal = $attendance->breaks_total_formatted;
+                    if ($breaksTotal === null || $breaksTotal === '' || $breaksTotal === '0') {
+                        $breaksTotal = '0:00';
+                    }
+
+                    $clockIn  = $attendance->clock_in_formatted ?? '';
+                    $clockOut = $attendance->clock_out_formatted ?? '';
+                    $totalWork = $attendance->total_work_formatted ?? '';
+                } else {
+                    $breaksTotal = '';
+                    $clockIn = '';
+                    $clockOut = '';
+                    $totalWork = '';
+                }
+
                 fputcsv($handle, [
                     $date->format('Y-m-d'),
                     $date->translatedFormat('D'),
-                    $attendance?->clock_in_formatted ?? '',
-                    $attendance?->clock_out_formatted ?? '',
-                    $attendance?->breaks_total_formatted ?? '',
-                    $attendance?->total_work_formatted ?? '',
+                    $clockIn,
+                    $clockOut,
+                    $breaksTotal,
+                    $totalWork,
                 ]);
             }
 

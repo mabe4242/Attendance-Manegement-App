@@ -12,11 +12,13 @@
         @method($method)
     @endif
     <table class="attendance__table">
-        <x-attendance-edit-row label="名前">{{ $attendance->user->name }}</x-attendance-edit-row>
+        <x-attendance-edit-row label="名前">
+            <div class="staff_name">{{ $attendance->user->name }}</div>
+        </x-attendance-edit-row>
         <x-attendance-edit-row label="日付">
             <div class="date">
-                <input type="text" name="year" class="year input-date" value="{{ old('year', $attendance->year) }}">
-                <input type="text" name="month_day" class="day input-date" value="{{ old('month_day', $attendance->month_day) }}">
+                <input type="text" name="year" class="year input-date" value="{{ old('year', $attendance->year) }}" readonly>
+                <input type="text" name="month_day" class="day input-date" value="{{ old('month_day', $attendance->month_day) }}" readonly>
             </div>
             @error('month_day')
                 <p class="error__message">{{ $message }}</p>
