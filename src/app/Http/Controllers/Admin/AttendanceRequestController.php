@@ -2,27 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\RequestStatus;
-use App\Enums\TableHeaders;
 use App\Http\Controllers\Controller;
 use App\Models\AttendanceRequest;
 use App\Services\AttendanceRequestService;
 use App\Traits\HandlesTransaction;
-use Illuminate\Http\Request;
 
 class AttendanceRequestController extends Controller
 {
     use HandlesTransaction;
-
-    public function index(Request $request)
-    {
-        $status = $request->query('status', RequestStatus::PENDING);
-        $attendanceRequests = AttendanceRequest::with('user')
-            ->status($status)->latestOrder()->get();
-        $headers = TableHeaders::requests();
-
-        return view('admin.request_index', compact('attendanceRequests', 'status', 'headers'));
-    }
 
     public function show($id)
     {

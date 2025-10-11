@@ -165,7 +165,9 @@ class AttendanceRequestTest extends TestCase
     public function submit_request_and_admin_can_view_it()
     {
         /** @var \App\Models\User $user */
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'email_verified_at' => now(),
+        ]);
         /** @var \App\Models\Admin $admin */
         $admin = Admin::factory()->create();
 
@@ -204,13 +206,13 @@ class AttendanceRequestTest extends TestCase
         $attendanceRequest = AttendanceRequest::where('user_id', $user->id)->firstOrFail();
 
         // 管理者の承認画面の確認
-        $this->actingAs($admin, 'admin');
+        $this->actingAs($admin, 'admin')->withSession(['last_guard' => 'admin']);
         $approveResponse = $this->get(route('admin.request', $attendanceRequest->id));
         $approveResponse->assertStatus(200);
         $approveResponse->assertSee('修正テスト');
 
         // 管理者の申請一覧画面の確認
-        $indexResponse = $this->get(route('admin.attendance_requests.index'));
+        $indexResponse = $this->get(route('attendance_requests.index'));
         $indexResponse->assertStatus(200);
         $indexResponse->assertSee($user->name);
         $indexResponse->assertSee('修正テスト');
@@ -250,7 +252,7 @@ class AttendanceRequestTest extends TestCase
             'reason' => '他人の申請です',
         ]);
 
-        $this->actingAs($user);
+        $this->actingAs($user)->withSession(['last_guard' => 'web']);
         $response = $this->get(route('attendance_requests.index'));
         $response->assertStatus(200);
 
@@ -289,7 +291,7 @@ class AttendanceRequestTest extends TestCase
             'clock_out' => '2025-10-02 18:00:00',
         ]);
 
-        $this->actingAs($user);
+        $this->actingAs($user)->withSession(['last_guard' => 'web']);
 
         // ユーザーが2件の修正申請を作成
         $this->post(route('attendance_request.store', $attendance1->id), [
@@ -355,7 +357,7 @@ class AttendanceRequestTest extends TestCase
             'clock_out' => '2025-10-01 18:00:00',
         ]);
 
-        $this->actingAs($user);
+        $this->actingAs($user)->withSession(['last_guard' => 'web']);
 
         // 勤怠修正申請
         $response = $this->post(route('attendance_request.store', $attendance->id), [

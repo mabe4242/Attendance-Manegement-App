@@ -23,7 +23,6 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::get('/attendance/detail/{id}', [UserAttendanceRequestController::class, 'show'])->name('attendance.detail');
     Route::get('/attendance/detail_or_create/{date}', [UserAttendanceRequestController::class, 'detailOrCreate'])->name('attendance.detail_or_create');
     Route::post('/attendance/detail/{id}', [UserAttendanceRequestController::class, 'store'])->name('attendance_request.store');
-    Route::get('/stamp_correction_request/list', [UserAttendanceRequestController::class, 'index'])->name('attendance_requests.index');
 });
 
 // 管理者認証
@@ -36,15 +35,28 @@ Route::prefix('admin')->group(function () {
         Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
         Route::get('/attendance/list', [AdminAttendanceController::class, 'index'])->name('admin.attendance.index');
         Route::get('/staff/list', [StaffController::class, 'index'])->name('admin.staff.index');
-        Route::get('/stamp_correction_request/list', [AdminAttendanceRequestController::class, 'index'])->name('admin.attendance_requests.index');
         Route::get('/attendance/staff/{id}', [AdminAttendanceController::class, 'staffAttendances'])->name('admin.staff_attendance');
         Route::get('/attendance/{user}/detail_or_create/{date}', [AdminAttendanceController::class, 'detailOrCreate'])->name('admin.detail_or_create');
         Route::get('/attendance/{id}', [AdminAttendanceController::class, 'show'])->name('admin.attendance.show');
         Route::put('/attendance/{id}', [AdminAttendanceController::class, 'update'])->name('admin.attendance.update');
-        Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [AdminAttendanceRequestController::class, 'show'])->name('admin.request');
-        Route::post('/stamp_correction_request/approve/{attendance_correct_request}', [AdminAttendanceRequestController::class, 'approve'])->name('admin.approve');
         Route::get('/attendance/staff/{id}/csv', [AdminAttendanceController::class, 'export'])->name('admin.csv');
     });
+});
+Route::middleware(['auth:admin'])->group(function () {
+    Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [AdminAttendanceRequestController::class, 'show'])->name('admin.request');
+    Route::post('/stamp_correction_request/approve/{attendance_correct_request}', [AdminAttendanceRequestController::class, 'approve'])->name('admin.approve');
+});
+
+// ユーザー・管理者同一パスのルート
+Route::middleware(['auth:admin,web'])->group(function () {
+    Route::get('/stamp_correction_request/list', function (Request $request) {
+        /** @var \App\Models\User|null $webUser */
+        $webUser = Auth::guard('web')->user();
+        if ($webUser && !$webUser->hasVerifiedEmail()) {
+            return redirect()->route('verification.notice');
+        }
+        return app(UserAttendanceRequestController::class)->index($request);
+    })->name('attendance_requests.index');
 });
 
 // メール認証に関するルート

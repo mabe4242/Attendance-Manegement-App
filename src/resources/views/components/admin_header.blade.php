@@ -14,7 +14,7 @@
                             <a class="header-nav__link btn" href="{{ route('admin.staff.index') }}">スタッフ一覧</a>
                         </li>
                         <li class="header-nav__item">
-                            <a class="header-nav__link btn" href="{{ route('admin.attendance_requests.index') }}">申請一覧</a>
+                            <a class="header-nav__link btn" href="{{ route('attendance_requests.index') }}">申請一覧</a>
                         </li>
                         <li class="header-nav__item">
                             <form class="form" action="{{ route('admin.logout') }}" method="post">

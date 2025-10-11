@@ -24,12 +24,13 @@ class AdminApproveTest extends TestCase
         /** @var \App\Models\Admin $admin */
         $admin = Admin::factory()->create();
         $this->actingAs($admin, 'admin');
+        $this->actingAs($admin, 'admin')->withSession(['last_guard' => 'admin']);
 
         $requests = AttendanceRequest::factory()->count(3)->create([
             'status' => RequestStatus::PENDING,
         ]);
 
-        $response = $this->get(route('admin.attendance_requests.index', [
+        $response = $this->get(route('attendance_requests.index', [
             'status' => RequestStatus::PENDING,
         ]));
         $response->assertStatus(200);
@@ -57,8 +58,8 @@ class AdminApproveTest extends TestCase
             ->for(Attendance::factory())
             ->create(['status' => RequestStatus::APPROVED]);
 
-        $this->actingAs($admin, 'admin');
-        $response = $this->get(route('admin.attendance_requests.index', [
+        $this->actingAs($admin, 'admin')->withSession(['last_guard' => 'admin']);
+        $response = $this->get(route('attendance_requests.index', [
             'status' => RequestStatus::APPROVED,
         ]));
         $response->assertStatus(200);
@@ -98,8 +99,8 @@ class AdminApproveTest extends TestCase
             'reason' => '修正テスト',
         ]);
 
-        $this->actingAs($admin, 'admin');
-        $response = $this->get(route('admin.attendance_requests.index', [
+        $this->actingAs($admin, 'admin')->withSession(['last_guard' => 'admin']);
+        $response = $this->get(route('attendance_requests.index', [
             'status' => RequestStatus::PENDING,
         ]));
 
