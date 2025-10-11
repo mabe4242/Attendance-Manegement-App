@@ -4,13 +4,13 @@
 }
 
 .attendance__content {
-    max-width: 900px;
+    max-width: 970px;
     margin: auto;
     padding: 60px;
 }
 
 .attendance__wrapper p.attendance__title {
-    max-width: 900px;
+    max-width: 970px;
     margin: auto;
     font-size: 30px;
     font-weight: bold;
@@ -146,6 +146,11 @@
     pointer-events: none;
     color: inherit;
     text-decoration: none;
+}
+
+.attendance__content {
+    transform: scale(0.9);
+    transform-origin: top center;
 }
 
 /* レスポンシブ */

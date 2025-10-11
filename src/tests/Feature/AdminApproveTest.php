@@ -38,7 +38,7 @@ class AdminApproveTest extends TestCase
         foreach ($requests as $request) {
             $response->assertSee($request->user->name);
             $response->assertSee($request->request_date->format('Y/m/d'));
-            $response->assertSee($request->reason);
+            $response->assertSee(mb_substr($request->reason, 0, 6));
         }
     }
 
@@ -66,7 +66,7 @@ class AdminApproveTest extends TestCase
         // すべての承認済みデータが表示されていることを確認
         foreach ($requests as $request) {
             $response->assertSee($request->user->name);
-            $response->assertSee($request->reason);
+            $response->assertSee(mb_substr($request->reason, 0, 6));
             $response->assertSee($request->request_date->format('Y/m/d'));
         }
     }

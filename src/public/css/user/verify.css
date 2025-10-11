@@ -58,3 +58,8 @@
 .resend__link:hover {
     color: #0056b3;
 }
+
+.verify-notice {
+    transform: scale(0.95);
+    transform-origin: top center;
+}

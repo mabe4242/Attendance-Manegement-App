@@ -73,3 +73,8 @@
 .login__button-submit {
     text-decoration: none;
 }
+
+.register-form__content {
+    transform: scale(0.9);
+    transform-origin: top center;
+}

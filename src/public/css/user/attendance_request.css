@@ -130,6 +130,11 @@ textarea {
     letter-spacing: 2px;
 }
 
+.attendance__content {
+    transform: scale(0.9);
+    transform-origin: top center;
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
     .attendance__content {
