@@ -13,7 +13,7 @@
 2. `composer install`
 3. `.env.example` ファイルから `.env` を作成し、環境変数を編集
 4. `.env.testing.example` ファイルから `.env.testing` を作成し、環境変数を編集
-5. `php artisan key:generate`
+5. `php artisan key:generate`を実行してください。このとき、`.env`にAPP_KEYが自動で編集されますが、`.env.testing`には自動で編集されないので、お手数おかけしますが手動でAPP_KEYを`.env.testing`にコピーしてください。
 6. `php artisan migrate`
 7. `php artisan migrate --env=testing`
 8. `php artisan db:seed`
