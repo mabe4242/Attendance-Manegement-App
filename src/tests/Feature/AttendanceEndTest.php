@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AttendanceCheckoutTest extends TestCase
+class AttendanceEndTest extends TestCase
 {
     use RefreshDatabase;
 
