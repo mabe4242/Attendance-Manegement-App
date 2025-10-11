@@ -195,7 +195,6 @@ class BreakTest extends TestCase
 
         $break->refresh();
         $this->assertNotNull($break->break_end);
-        $this->post(route('attendance.checkout'));
 
         $response = $this->get(route('attendance.index'));
 

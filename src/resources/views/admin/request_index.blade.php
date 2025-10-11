@@ -20,7 +20,7 @@
                             <td class="attendance__data">{{ RequestStatus::label($request->status) }}</td>
                             <td class="attendance__data">{{ $request->user->name }}</td>
                             <td class="attendance__data">{{ $request->request_date->format('Y/m/d') }}</td>
-                            <td class="attendance__data">{{ Str::limit($request->reason, 15, '...') }}</td>
+                            <td class="attendance__data">{{ Str::limit($request->reason, 14, '...') }}</td>
                             <td class="attendance__data">{{ $request->created_at->format('Y/m/d') }}</td>
                             <td class="attendance__data">
                                 <a class="attendance__detail" href="{{ route('admin.request', $request->id) }}">詳細</a>

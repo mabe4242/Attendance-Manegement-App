@@ -184,8 +184,7 @@
 @media (max-width: 768px) {
     .attendance__content {
         max-width: 90%;
-        margin: 40px auto;
-        padding: 0 10px;
+        padding: 25px;
     }
 
     .attendance__wrapper p.attendance__title {

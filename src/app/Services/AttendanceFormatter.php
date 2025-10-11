@@ -64,7 +64,7 @@ class AttendanceFormatter
             'weekday'      => self::weekdayLabel($date->dayOfWeek),
             'clock_in'     => $attendance->clock_in ? $attendance->clock_in->format('H:i') : '',
             'clock_out'    => $attendance->clock_out ? $attendance->clock_out->format('H:i') : '',
-            'break'        => $attendance->clock_in && $attendance->clock_out ? self::formatMinutes($calc['breakMinutes']) : '',
+            'break'        => $attendance->clock_in ? self::formatMinutes($calc['breakMinutes']) : '',
             'total_work'   => $attendance->clock_in && $attendance->clock_out ? self::formatMinutes($calc['totalMinutes']) : '',
             'is_future'    => $date->isFuture(),
         ];
