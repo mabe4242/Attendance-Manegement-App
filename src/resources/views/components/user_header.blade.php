@@ -14,7 +14,7 @@
                             <a class="header-nav__link btn" href="{{ route('attendance.index') }}">勤怠一覧</a>
                         </li>
                         <li class="header-nav__item">
-                            <a class="header-nav__link btn" href="{{ route('attendance_requests.index') }}">申請</a>
+                            <a class="header-nav__link btn" href="{{ route('attendance_requests.index', ['from' => 'web']) }}">申請</a>
                         </li>
                         <li class="header-nav__item">
                             <form class="form" action="/logout" method="post">

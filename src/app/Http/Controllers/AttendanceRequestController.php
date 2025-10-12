@@ -29,21 +29,22 @@ class AttendanceRequestController extends Controller
 
     public function index(Request $request)
     {
-        $lastGuard = session('last_guard');
-        
+        $from = $request->query('from');
+        $lastGuard = $from ?? session('last_guard');
+
         if ($lastGuard === 'admin' && auth('admin')->check()) {
             $status = $request->query('status', RequestStatus::PENDING);
-            $attendanceRequests = AttendanceRequest::with('user')
-                ->status($status)->latestOrder()->get();
+            $attendanceRequests = AttendanceRequest::with('user')->status($status)
+                ->latestOrder()->get();
             $headers = TableHeaders::requests();
 
             return view('admin.request_index', compact('attendanceRequests', 'status', 'headers'));
         }
 
         if ($lastGuard === 'web' && auth('web')->check()) {
-            $status = $request->input('status', RequestStatus::PENDING);
-            $query = AttendanceRequest::where('user_id', Auth::id())->where('status', $status);
-            $attendanceRequests = $query->latest()->get();
+            $status = $request->query('status', RequestStatus::PENDING);
+            $attendanceRequests = AttendanceRequest::where('user_id', Auth::id())
+                ->where('status', $status)->latest()->get();
             $headers = TableHeaders::requests();
 
             return view('user.request_index', compact('attendanceRequests', 'status', 'headers'));

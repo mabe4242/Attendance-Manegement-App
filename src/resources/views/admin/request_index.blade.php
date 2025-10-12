@@ -13,7 +13,7 @@
         <div class="attendance__content">
             <div class="attendance__wrapper">
                 <p class="attendance__title">申請一覧</p>
-                <x-nav :status="$status" routeName="attendance_requests.index" />
+                <x-nav :status="$status" routeName="attendance_requests.index" from="admin"/>
                 <x-table :headers=$headers>
                     @foreach ($attendanceRequests as $request)
                         <tr>
